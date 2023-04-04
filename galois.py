@@ -1,18 +1,17 @@
 
-def gAdd(a : bytes, b : bytes):
+def gAdd(a : int, b : int):
     return a ^ b
 
-def gMult(a : bytes, b : bytes):
-    p = bytes(0)
-
+def gMult(a : int, b : int):
+    p = 0
     for _ in range(8):
         if (b & 1) != 0:
-            p ^= a
+            p = gAdd(p, a)
 
-        hi_bit_set = (a & 0x80) != 0
+        hi_bit_set = (a & (1 << 7)) != 0
         a <<= 1
         if hi_bit_set:
-            a ^= 0x1B
+            a ^= 0x011B
         b >>= 1
 
     return p
