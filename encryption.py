@@ -1,11 +1,11 @@
 class Encryption:
     def __init__(self):
         return
-    def SubBytes():
+    def SubBytes(self):
         return 1
-    def ShiftRows():
+    def ShiftRows(self):
         return 1
-    def MixColumns():
+    def MixColumns(self):
         return 1
-    def AddRoundKeys():
+    def AddRoundKeys(self):
         return 1
