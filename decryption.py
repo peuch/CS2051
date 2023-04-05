@@ -7,7 +7,7 @@ class Decryption:
         return 1
     def InvMixColumns():
         return 1
-    def InvAddRoundKeys():
+    def InvAddRoundKeys(state, key):
         ret = [[0 for _ in range(4)] for _ in range(4)]
         for i in range(4):
             auxKey = (key // (256**i)) % 256
