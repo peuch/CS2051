@@ -1,6 +1,7 @@
 import galois
 import unittest
 import encryption
+import decryption
 
 class TestGaloisField(unittest.TestCase):
     def test_add(self):
@@ -22,6 +23,21 @@ class TestGaloisField(unittest.TestCase):
             [15,12,13,14]
         ]
         self.assertEqual(encryption.Encryption.ShiftRows(state), expected)
+    def test_invshiftrows(self):
+        shifted=[
+            [0,1,2,3],
+            [5,6,7,4],
+            [10,11,8,9],
+            [15,12,13,14]
+        ]
+        expected=[
+            [0,1,2,3],
+            [4,5,6,7],
+            [8,9,10,11],
+            [12,13,14,15]
+        ]
+        self.assertEqual(decryption.Decryption.InvShiftRows(shifted), expected)
+
         
 if __name__ == '__main__':
     unittest.main()
