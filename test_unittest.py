@@ -1,3 +1,4 @@
+import random
 import galois
 import encryption
 import decryption
@@ -42,6 +43,14 @@ class TestMixColumns(unittest.TestCase):
             [0x45, 0x5c, 0x01, 0xc6]
         ]
         self.assertEqual(decryption.Decryption.InvMixColumns(state), expected)
+    
+    def test_both_with_random(self):
+        for _ in range(1000):
+            state = [[random.randint(0, 255) for _ in range(4)] for _ in range(4)]
+            encrypted = encryption.Encryption.MixColumns(state)
+            decrypted = decryption.Decryption.InvMixColumns(encrypted)
+            self.assertEqual(decrypted, state)
+
 
 if __name__ == '__main__':
     unittest.main()
