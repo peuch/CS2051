@@ -10,5 +10,9 @@ class TestGaloisField(unittest.TestCase):
         self.assertEqual(galois.gMult(0x57, 0x13), 0xfe)
         self.assertEqual(galois.gMult(0x57, 0x83), 0xc1)
     
+class TestAddRoundKeys(unittest.TestCase):
+    def test_simple(self):
+        return NotImplementedError
+
 if __name__ == '__main__':
     unittest.main()
