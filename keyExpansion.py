@@ -37,4 +37,4 @@ def keyExpasion(key, nK = 4):
 
         w[i] = (w0 << 60) + (w1 << 40) + (w2 << 20) + w3
 
-    return
+    return w
