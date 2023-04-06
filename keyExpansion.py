@@ -15,26 +15,29 @@ def keyExpasion(key):
 
         # RotWord
 
-        a2 = temp % 256
-        temp //= 256
-        a1 = temp % 256
-        temp //= 256
-        a0 = temp % 256
-        temp //= 256
-        a3 = temp % 256
+        a2 = temp % (1 << (0x08))
+        temp //= (1 << (0x08))
+        a1 = temp % (1 << (0x08))
+        temp //= (1 << (0x08))
+        a0 = temp % (1 << (0x08))
+        temp //= (1 << (0x08))
+        a3 = temp % (1 << (0x08))
     
         a0 = SBOX[a0]
         a1 = SBOX[a1]
         a2 = SBOX[a2]
         a3 = SBOX[a3]
         
-        temp = w[i - 1] % (1 << 32)
+        temp = w[i - 1]
+        
+        aux1 = ((temp >> 0x60) % (1 << 0x20))
+        aux2 = (((a0 << 0x18) | (a1 << 0x10)  | (a2 << 0x08) | a3) ^ (rcon << 0x18))
+        
+        w0 = ((temp >> 0x60) % (1 << 0x20)) ^ (((a0 << 0x18) | (a1 << 0x10)  | (a2 << 0x08) | a3) ^ (rcon << 0x18))
+        w1 = ((temp >> 0x40) % (1 << 0x20)) ^ w0
+        w2 = ((temp >> 0x20) % (1 << 0x20)) ^ w1
+        w3 = ((temp >> 0x00) % (1 << 0x20)) ^ w2
 
-        w0 = ((temp >> 0x00) % (1 << 0x20)) ^ (((a0 << 0x18) | (a1 << 0x10)  | (a2 << 0x08) | a3) ^ (rcon << 0x18))
-        w1 = ((temp >> 0x20) % (1 << 0x20)) ^ w0
-        w2 = ((temp >> 0x40) % (1 << 0x20)) ^ w1
-        w3 = ((temp >> 0x60) % (1 << 0x20)) ^ w2
-
-        w[i] = (w0 << 60) + (w1 << 40) + (w2 << 20) + w3
+        w[i] = (w0 << 0x60) + (w1 << 0x40) + (w2 << 0x20) + w3
 
     return w
