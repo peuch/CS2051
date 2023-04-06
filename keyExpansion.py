@@ -1,7 +1,7 @@
 from sbox import SBOX
 from galois import gMult
 
-def keyExpasion(key, nK = 4):
+def keyExpasion(key):
     w = [0 for _ in range(11)]  # 10 rounds -> 11 expansions
 
     w[0] = key
