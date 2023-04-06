@@ -10,7 +10,7 @@ class Decryption:
     def InvAddRoundKeys(state, key):
         ret = [[0 for _ in range(4)] for _ in range(4)]
         for i in range(4):
-            auxKey = (key // (256**i)) % 256
+            auxKey = (key // ((1 << 32)**i)) % (1 << 32)
 
             a = state[0][i]
             b = state[1][i]
