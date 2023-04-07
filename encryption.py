@@ -1,7 +1,7 @@
 class Encryption:
     def __init__(self):
         return
-    def SubBytes(ciphertext: [int][int], key: [int][int]):
+    def SubBytes(state: [int][int], mapping: [int][int]):
         for r in range(key):
             for c in range(key[r]):
                 item: int = key[r][c]
