@@ -2,13 +2,13 @@ class Encryption:
     def __init__(self):
         return
     def SubBytes(state: [int][int], mapping: [int][int]):
-        for r in range(key):
-            for c in range(key[r]):
-                item: int = key[r][c]
+        for r in range(mapping):
+            for c in range(mapping[r]):
+                item: int = mapping[r][c]
                 cipher_row: int = item / 16
                 cipher_col: int = item % 16
-                key[r][c] = ciphertext[cipher_row][cipher_col]
-        return key
+                mapping[r][c] = state[cipher_row][cipher_col]
+        return mapping
     def ShiftRows(self):
         return 1
     def MixColumns(self):
