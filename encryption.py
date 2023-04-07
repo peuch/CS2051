@@ -1,6 +1,17 @@
 class Encryption:
     def __init__(self):
         return
+
+    def SubBytes(self):
+        return 1
+    def ShiftRows(state):
+        ret = [[0 for _ in range(4)] for _ in range(4)]
+        for i in range(4):
+            thisrow=state[i].copy()
+            for j in range(4):
+                ret[i][j]=thisrow[(j+i)%4]
+        return ret
+
     def SubBytes(state: [int][int], mapping: [int][int]):
         for r in range(mapping):
             for c in range(mapping[r]):
