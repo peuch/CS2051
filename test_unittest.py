@@ -1,5 +1,6 @@
 import random
 import galois
+import unittest
 import encryption
 import decryption
 import unittest 
@@ -13,7 +14,68 @@ class TestGaloisField(unittest.TestCase):
         self.assertEqual(galois.gMult(0x02, 0x87), 0x15)
         self.assertEqual(galois.gMult(0x57, 0x13), 0xfe)
         self.assertEqual(galois.gMult(0x57, 0x83), 0xc1)
-    
+    def test_shiftrows(self):
+        state = [[0 for _ in range(4)] for _ in range(4)]
+        for i in range(4):
+            for j in range(4):
+                state[i][j]=i*4+j
+        expected=[
+            [0,1,2,3],
+            [5,6,7,4],
+            [10,11,8,9],
+            [15,12,13,14]
+        ]
+        self.assertEqual(encryption.Encryption.ShiftRows(state), expected)
+    def test_invshiftrows(self):
+        shifted=[
+            [0,1,2,3],
+            [5,6,7,4],
+            [10,11,8,9],
+            [15,12,13,14]
+        ]
+        expected=[
+            [0,1,2,3],
+            [4,5,6,7],
+            [8,9,10,11],
+            [12,13,14,15]
+        ]
+        self.assertEqual(decryption.Decryption.InvShiftRows(shifted), expected)
+
+class TestAddRoundKeys(unittest.TestCase):
+    def test_AddRoundKeys(self):
+        key = 0x62636363626363636263636362636363
+        state = [
+            [0x59, 0xc2, 0xca, 0x4a],
+            [0x1c, 0x86, 0xdd, 0x27],
+            [0xee, 0x36, 0xaf, 0xdc],
+            [0xa1, 0xd1, 0x02, 0xa2],
+            ]
+        expected = [
+            [0x3b, 0xa0, 0xa8, 0x28],
+            [0x7f, 0xe5, 0xbe, 0x44],
+            [0x8d, 0x55, 0xcc, 0xbf],
+            [0xc2, 0xb2, 0x61, 0xc1],
+            ]
+        
+        self.assertEqual(encryption.Encryption.AddRoundKeys(state, key), expected)
+     
+    def test_TestInvAddRoundKeys(self):
+        key = 0x62636363626363636263636362636363
+        state = [
+            [0x59, 0xc2, 0xca, 0x4a],
+            [0x1c, 0x86, 0xdd, 0x27],
+            [0xee, 0x36, 0xaf, 0xdc],
+            [0xa1, 0xd1, 0x02, 0xa2],
+            ]
+        expected = [
+            [0x3b, 0xa0, 0xa8, 0x28],
+            [0x7f, 0xe5, 0xbe, 0x44],
+            [0x8d, 0x55, 0xcc, 0xbf],
+            [0xc2, 0xb2, 0x61, 0xc1],
+            ]
+        
+        self.assertEqual(decryption.Decryption.InvAddRoundKeys(state, key), expected)
+        
 class TestMixColumns(unittest.TestCase):
     def test_MixColumns_WikipediaTest(self):
         state = [
@@ -51,7 +113,7 @@ class TestMixColumns(unittest.TestCase):
             encrypted = encryption.Encryption.MixColumns(state)
             decrypted = decryption.Decryption.InvMixColumns(encrypted)
             self.assertEqual(decrypted, state)
-
+        
 class TestKeyExpansion(unittest.TestCase):
     def test_keyExpansion_1(self):
         key = 0x5468617473206D79204B756E67204675
@@ -110,7 +172,6 @@ class TestKeyExpansion(unittest.TestCase):
         ]
 
         self.assertEqual(w, expected)
-
-
+        
 if __name__ == '__main__':
     unittest.main()
