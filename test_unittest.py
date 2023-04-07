@@ -1,10 +1,9 @@
+import random
 import galois
 import unittest
 import encryption
 import decryption
 import unittest 
-import encryption
-import decryption
 import keyExpansion
 
 class TestGaloisField(unittest.TestCase):
@@ -59,7 +58,7 @@ class TestAddRoundKeys(unittest.TestCase):
             ]
         
         self.assertEqual(encryption.Encryption.AddRoundKeys(state, key), expected)
-    
+     
     def test_TestInvAddRoundKeys(self):
         key = 0x62636363626363636263636362636363
         state = [
@@ -76,6 +75,44 @@ class TestAddRoundKeys(unittest.TestCase):
             ]
         
         self.assertEqual(decryption.Decryption.InvAddRoundKeys(state, key), expected)
+        
+class TestMixColumns(unittest.TestCase):
+    def test_MixColumns_WikipediaTest(self):
+        state = [
+            [0xdb, 0xf2, 0x01, 0xc6],
+            [0x13, 0x0a, 0x01, 0xc6],
+            [0x53, 0x22, 0x01, 0xc6],
+            [0x45, 0x5c, 0x01, 0xc6]
+        ]
+        expected = [
+            [0x8e, 0x9f, 0x01, 0xc6],
+            [0x4d, 0xdc, 0x01, 0xc6],
+            [0xa1, 0x58, 0x01, 0xc6],
+            [0xbc, 0x9d, 0x01, 0xc6]
+        ]
+        self.assertEqual(encryption.Encryption.MixColumns(state), expected)
+
+    def test_InvMixColumns_WikipediaTest(self):
+        state = [
+            [0x8e, 0x9f, 0x01, 0xc6],
+            [0x4d, 0xdc, 0x01, 0xc6],
+            [0xa1, 0x58, 0x01, 0xc6],
+            [0xbc, 0x9d, 0x01, 0xc6]
+        ]
+        expected = [
+            [0xdb, 0xf2, 0x01, 0xc6],
+            [0x13, 0x0a, 0x01, 0xc6],
+            [0x53, 0x22, 0x01, 0xc6],
+            [0x45, 0x5c, 0x01, 0xc6]
+        ]
+        self.assertEqual(decryption.Decryption.InvMixColumns(state), expected)
+    
+    def test_both_with_random(self):
+        for _ in range(1000):
+            state = [[random.randint(0, 255) for _ in range(4)] for _ in range(4)]
+            encrypted = encryption.Encryption.MixColumns(state)
+            decrypted = decryption.Decryption.InvMixColumns(encrypted)
+            self.assertEqual(decrypted, state)
         
 class TestKeyExpansion(unittest.TestCase):
     def test_keyExpansion_1(self):
@@ -135,6 +172,6 @@ class TestKeyExpansion(unittest.TestCase):
         ]
 
         self.assertEqual(w, expected)
-
+        
 if __name__ == '__main__':
     unittest.main()
