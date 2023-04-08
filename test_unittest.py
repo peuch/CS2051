@@ -172,6 +172,19 @@ class TestKeyExpansion(unittest.TestCase):
         ]
 
         self.assertEqual(w, expected)
+
+class Test_CreateState(unittest.TestCase):
+    def test_shortPlaintext(self):
+        string = "abcdef"
+        expected = [
+            [
+                [0x61, 0x65, 0, 0],
+                [0x62, 0x66, 0, 0],
+                [0x63, 0, 0, 0],
+                [0x64, 0, 0, 0]
+            ]
+        ]
+        self.assertEqual(encryption.Encryption.createState(string), expected)
         
 if __name__ == '__main__':
     unittest.main()
