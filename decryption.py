@@ -11,7 +11,7 @@ class Decryption:
         for i in range(4):
             for j in range(4):
                 ret[i][j] = INV_SBOX[state[i][j]]
-        return 1
+        return ret
     
     def InvShiftRows(state):
         ret = [[0 for _ in range(4)] for _ in range(4)]
@@ -21,7 +21,6 @@ class Decryption:
             for j in range(4):
                 ret[i][j]=thisrow[(j+shift)%4]
         return ret
-        return 1
     
     def InvMixColumns(state):
         ret = [[0 for _ in range(4)] for _ in range(4)]
@@ -40,7 +39,7 @@ class Decryption:
     def InvAddRoundKeys(state, key):
         ret = [[0 for _ in range(4)] for _ in range(4)]
         for i in range(4):
-            auxKey = (key // ((1 << 32)**i)) % (1 << 32)
+            auxKey = (key // ((1 << 32)**(3 - i))) % (1 << 32)
             a = state[0][i]
             b = state[1][i]
             c = state[2][i]
@@ -68,7 +67,7 @@ class Decryption:
             state = Decryption.InvShiftRows(state)
             state = Decryption.InvSubBytes(state)
             state = Decryption.InvAddRoundKeys(state, w[round])
-            state = Decryption.InvMixColumns(state, w[round])
+            state = Decryption.InvMixColumns(state)
 
         state = Decryption.InvShiftRows(state)
         state = Decryption.InvSubBytes(state)
