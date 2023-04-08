@@ -12,7 +12,7 @@ class Encryption:
                 ret[i][j]=thisrow[(j+i)%4]
         return ret
 
-    def SubBytes(state: [int][int], mapping: [int][int]):
+    def SubBytes(state, mapping):
         for r in range(mapping):
             for c in range(mapping[r]):
                 item: int = mapping[r][c]
@@ -38,6 +38,11 @@ class Encryption:
         ret = [[0 for _ in range(4)] for _ in range(4)]
         for i in range(4):
             auxKey = (key // ((1 << 32)**i)) % (1 << 32)
+            a = state[0][i]
+            b = state[1][i]
+            c = state[2][i]
+            d = state[3][i]
+
             aux = a * 256**3 + b * 256**2 + c * 256 + d
 
             aux ^= auxKey
