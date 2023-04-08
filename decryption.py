@@ -1,10 +1,18 @@
 import galois
+import keyExpansion
+from inv_sbox import INV_SBOX
 
 class Decryption:
     def __init__(self):
         return
-    def InvSubBytes():
+    
+    def InvSubBytes(state):        
+        ret = [[0 for _ in range(4)] for _ in range(4)]
+        for i in range(4):
+            for j in range(4):
+                ret[i][j] = INV_SBOX[state[i][j]]
         return 1
+    
     def InvShiftRows(state):
         ret = [[0 for _ in range(4)] for _ in range(4)]
         for i in range(4):
@@ -51,3 +59,19 @@ class Decryption:
             ret[0][i] = aux % 256
 
         return ret
+
+    def decypher(cyphertext, key):
+        state = cyphertext
+        w = keyExpansion.keyExpasion(key)
+        state = Decryption.InvAddRoundKeys(state, w[10])
+        for round in range(9, 0, -1):
+            state = Decryption.InvShiftRows(state)
+            state = Decryption.InvSubBytes(state)
+            state = Decryption.InvAddRoundKeys(state, w[round])
+            state = Decryption.InvMixColumns(state, w[round])
+
+        state = Decryption.InvShiftRows(state)
+        state = Decryption.InvSubBytes(state)
+        state = Decryption.InvAddRoundKeys(state, w[0])
+
+        return state
