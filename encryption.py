@@ -37,7 +37,7 @@ class Encryption:
     def AddRoundKeys(state, key):
         ret = [[0 for _ in range(4)] for _ in range(4)]
         for i in range(4):
-            auxKey = (key // ((1 << 32)**i)) % (1 << 32)
+            auxKey = (key // ((1 << 32)**(3 - i))) % (1 << 32)
             a = state[0][i]
             b = state[1][i]
             c = state[2][i]
