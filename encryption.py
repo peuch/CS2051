@@ -25,6 +25,21 @@ class Encryption:
             all_states.append(state)
         return all_states
     
+    def cipher(input, word):
+        output = []
+        for state in input:
+            state = Encryption.AddRoundKeys(state, word[0, 3])
+            for round in range(1, 10-1):
+                state = Encryption.SubBytes(state)
+                state = Encryption.ShiftRows(state)
+                state = Encryption.MixColumns(state)
+                state = Encryption.AddRoundKeys(state, word[round*4, (round+1)*4-1])
+            
+            state = Encryption.SubBytes(state)
+            state = Encryption.ShiftRows(state)
+            state = Encryption.AddRoundKeys(state, word[10*4, (10+1)*4-1])
+            output.append(state)
+        return output
 
         
 
@@ -81,4 +96,3 @@ class Encryption:
 
         return ret
     
-    print(createState("abcdef"))
