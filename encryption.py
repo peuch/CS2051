@@ -1,4 +1,5 @@
 import galois
+from sbox import SBOX
 
 class Encryption:
     def __init__(self):
@@ -24,7 +25,7 @@ class Encryption:
             all_states.append(state)
         return all_states
     
-    def cipher(input, word):
+    def cypher(input, word):
         output = []
         for state in input:
             state = Encryption.AddRoundKeys(state, word[0, 3])
@@ -50,14 +51,12 @@ class Encryption:
                 ret[i][j]=thisrow[(j+i)%4]
         return ret
 
-    def SubBytes(state, mapping):
-        for r in range(mapping):
-            for c in range(mapping[r]):
-                item: int = mapping[r][c]
-                cipher_row: int = item / 16
-                cipher_col: int = item % 16
-                mapping[r][c] = state[cipher_row][cipher_col]
-        return mapping
+    def SubBytes(state):
+        ret = [[0 for _ in range(4)] for _ in range(4)]
+        for r in range(4):
+            for c in range(4):
+                ret[r][c] = SBOX[state[r][c]]
+        return ret
     
     def MixColumns(state):
         ret = [[0 for _ in range(4)] for _ in range(4)]
