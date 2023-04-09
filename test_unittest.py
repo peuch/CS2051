@@ -1,10 +1,12 @@
 import random
+import string
 import galois
 import unittest
 import encryption
 import decryption
 import unittest 
 import keyExpansion
+from auxiliary_functions import createState
 
 class TestGaloisField(unittest.TestCase):
     def test_add(self):
@@ -180,13 +182,13 @@ class Test_CreateState(unittest.TestCase):
         string = "abcdef"
         expected = [
             [
-                ['0x61', '0x65', 0, 0],
-                ['0x62', '0x66', 0, 0],
-                ['0x63', 0, 0, 0],
-                ['0x64', 0, 0, 0]
+                [0x61, 0x65, 0, 0],
+                [0x62, 0x66, 0, 0],
+                [0x63, 0, 0, 0],
+                [0x64, 0, 0, 0]
             ]
         ]
-        self.assertEqual(encryption.Encryption.createState(string), expected)
+        self.assertEqual(createState(string), expected)
         
 class TestDecypher(unittest.TestCase):
     def test_individual(self):
@@ -295,6 +297,27 @@ class TestCypher(unittest.TestCase):
         self.assertEqual(cyphertext, expected)
 
 
+class TestUsage(unittest.TestCase):
+    def test_1(self):
+        key = ""
+        text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+        cyphertext = encryption.Encryption.encrypt(text, key)
+        plaintext = decryption.Decryption.decrypt(cyphertext, key)
+        self.assertEqual(plaintext, text)
+
+    def test_rand(self):
+        for _ in range(100):
+            keyLen = random.randint(1, 64)
+            key = ""
+            for _ in range(keyLen):
+                key += random.choices(string.ascii_lowercase)[0]
+            textLen = random.randint(1, 1024)
+            text = ""
+            for _ in range(textLen):
+                text += random.choices(string.ascii_lowercase)[0]
+            cyphertext = encryption.Encryption.encrypt(text, key)
+            plaintext = decryption.Decryption.decrypt(cyphertext, key)
+            self.assertEqual(plaintext, text)
 
 if __name__ == '__main__':
     unittest.main()
