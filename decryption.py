@@ -1,6 +1,8 @@
 import galois
 import keyExpansion
 from inv_sbox import INV_SBOX
+from auxiliary_functions import createState
+from auxiliary_functions import createText
 
 class Decryption:
     def __init__(self):
@@ -74,3 +76,11 @@ class Decryption:
         state = Decryption.InvAddRoundKeys(state, w[0])
 
         return state
+
+    def decrypt(text, key):
+        all_states = createState(text)
+        all_encrypted = []
+        for state in all_states:
+            all_encrypted.append(Decryption.decypher(state, key))
+        cyphertext = createText(all_encrypted)
+        return cyphertext
