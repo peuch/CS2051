@@ -1,4 +1,5 @@
 import galois
+import keyExpansion
 from sbox import SBOX
 
 class Encryption:
@@ -25,23 +26,20 @@ class Encryption:
             all_states.append(state)
         return all_states
     
-    def cypher(input, word):
-        output = []
-        for state in input:
-            state = Encryption.AddRoundKeys(state, word[0, 3])
-            for round in range(1, 10-1):
-                state = Encryption.SubBytes(state)
-                state = Encryption.ShiftRows(state)
-                state = Encryption.MixColumns(state)
-                state = Encryption.AddRoundKeys(state, word[round*4, (round+1)*4-1])
-            
+    def cypher(plaintext, key):
+        state = plaintext.copy()
+        w = keyExpansion.keyExpasion(key)
+        state = Encryption.AddRoundKeys(state, w[0])
+        for round in range(1, 10):
             state = Encryption.SubBytes(state)
             state = Encryption.ShiftRows(state)
-            state = Encryption.AddRoundKeys(state, word[10*4, (10+1)*4-1])
-            output.append(state)
-        return output
-
+            state = Encryption.MixColumns(state)
+            state = Encryption.AddRoundKeys(state, w[round])
         
+        state = Encryption.SubBytes(state)
+        state = Encryption.ShiftRows(state)
+        state = Encryption.AddRoundKeys(state, w[10])
+        return state
 
     def ShiftRows(state):
         ret = [[0 for _ in range(4)] for _ in range(4)]
