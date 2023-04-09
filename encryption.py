@@ -3,7 +3,45 @@ import galois
 class Encryption:
     def __init__(self):
         return
+    
+    def createState(text):
+        all_states = []
+        #hex_message = text.encode("utf-8").hex()
+        i=0
+        finished=False
+        while (i<len(text) and not finished):
+            #finished filling previous array, still more left to message
+            state = [[0 for _ in range(4)] for _ in range(4)]
+            for col in range(4):
+                for row in range(4):
+                    if (i+1<=len(text)):
+                        #we haven't reached end of string yet
+                        state[row][col] = hex(ord(text[i:i+1])) #gives hex value
+                        i=i+1
+                    else:
+                        finished=True
+                        break
+            all_states.append(state)
+        return all_states
+    
+    def cipher(input, word):
+        output = []
+        for state in input:
+            state = Encryption.AddRoundKeys(state, word[0, 3])
+            for round in range(1, 10-1):
+                state = Encryption.SubBytes(state)
+                state = Encryption.ShiftRows(state)
+                state = Encryption.MixColumns(state)
+                state = Encryption.AddRoundKeys(state, word[round*4, (round+1)*4-1])
+            
+            state = Encryption.SubBytes(state)
+            state = Encryption.ShiftRows(state)
+            state = Encryption.AddRoundKeys(state, word[10*4, (10+1)*4-1])
+            output.append(state)
+        return output
+
         
+
     def ShiftRows(state):
         ret = [[0 for _ in range(4)] for _ in range(4)]
         for i in range(4):
@@ -56,3 +94,4 @@ class Encryption:
             ret[0][i] = aux % 256
 
         return ret
+    
