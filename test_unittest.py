@@ -14,6 +14,8 @@ class TestGaloisField(unittest.TestCase):
         self.assertEqual(galois.gMult(0x02, 0x87), 0x15)
         self.assertEqual(galois.gMult(0x57, 0x13), 0xfe)
         self.assertEqual(galois.gMult(0x57, 0x83), 0xc1)
+
+class TestShiftRows(unittest.TestCase):
     def test_shiftrows(self):
         state = [[0 for _ in range(4)] for _ in range(4)]
         for i in range(4):
@@ -273,6 +275,26 @@ class TestDecypher(unittest.TestCase):
         ]
         plaintext = decryption.Decryption.decypher(cyphertext=cyphertext, key=key)
         self.assertEqual(plaintext, expected)
+
+class TestCypher(unittest.TestCase):
+    def test_cypher1(self):
+        key = 0x2b7e151628aed2a6abf7158809cf4f3c
+        plaintext = [
+            [0x32, 0x88, 0x31, 0xe0],
+            [0x43, 0x5a, 0x31, 0x37],
+            [0xf6, 0x30, 0x98, 0x07],
+            [0xa8, 0x8d, 0xa2, 0x34]
+        ] 
+        expected = [
+            [0x39, 0x02, 0xdc, 0x19],
+            [0x25, 0xdc, 0x11, 0x6a],
+            [0x84, 0x09, 0x85, 0x0b],
+            [0x1d, 0xfb, 0x97, 0x32]    
+        ]
+        cyphertext = encryption.Encryption.cypher(plaintext, key)
+        self.assertEqual(cyphertext, expected)
+
+
 
 if __name__ == '__main__':
     unittest.main()
