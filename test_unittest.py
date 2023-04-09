@@ -178,10 +178,10 @@ class Test_CreateState(unittest.TestCase):
         string = "abcdef"
         expected = [
             [
-                [0x61, 0x65, 0, 0],
-                [0x62, 0x66, 0, 0],
-                [0x63, 0, 0, 0],
-                [0x64, 0, 0, 0]
+                ['0x61', '0x65', 0, 0],
+                ['0x62', '0x66', 0, 0],
+                ['0x63', 0, 0, 0],
+                ['0x64', 0, 0, 0]
             ]
         ]
         self.assertEqual(encryption.Encryption.createState(string), expected)

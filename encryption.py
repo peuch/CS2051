@@ -9,7 +9,6 @@ class Encryption:
         #hex_message = text.encode("utf-8").hex()
         i=0
         finished=False
-        print(text)
         while (i<len(text) and not finished):
             #finished filling previous array, still more left to message
             state = [[0 for _ in range(4)] for _ in range(4)]
