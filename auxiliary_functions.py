@@ -23,7 +23,10 @@ def createText(allstates):
     for state in allstates:
         for c in range(4):
             for r in range(4):
-                text.append(chr(state[r][c]))
+                text += chr(state[r][c])
+    
+    while ord(text[-1]) == 0:
+        text = text[:-1]
     return text
 
 def convertKey(key):
