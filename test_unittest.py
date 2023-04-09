@@ -173,5 +173,93 @@ class TestKeyExpansion(unittest.TestCase):
 
         self.assertEqual(w, expected)
         
+class TestDecypher(unittest.TestCase):
+    def test_individual(self):
+        key = 0x2b7e151628aed2a6abf7158809cf4f3c
+        w = keyExpansion.keyExpasion(key)
+        expected_w = [
+            0x2b7e151628aed2a6abf7158809cf4f3c,
+            0xa0fafe1788542cb123a339392a6c7605,
+            0xf2c295f27a96b9435935807a7359f67f,
+            0x3d80477d4716fe3e1e237e446d7a883b,
+            0xef44a541a8525b7fb671253bdb0bad00,
+            0xd4d1c6f87c839d87caf2b8bc11f915bc,
+            0x6d88a37a110b3efddbf98641ca0093fd,
+            0x4e54f70e5f5fc9f384a64fb24ea6dc4f,
+            0xead27321b58dbad2312bf5607f8d292f,
+            0xac7766f319fadc2128d12941575c006e,
+            0xd014f9a8c9ee2589e13f0cc8b6630ca6
+        ]
+        
+        self.assertEqual(w, expected_w)
+
+        state = [   
+            [0xa4, 0x68, 0x6b, 0x02],        
+            [0x9c, 0x9f, 0x5b, 0x6a],
+            [0x7f, 0x35, 0xea, 0x50],
+            [0xf2, 0x2b, 0x43, 0x49]
+        ]
+
+        expected_round = [ 
+            [0x04, 0xe0, 0x48, 0x28],
+            [0x66, 0xcb, 0xf8, 0x06],
+            [0x81, 0x19, 0xd3, 0x26],
+            [0xe5, 0x9a, 0x7a, 0x4c]
+        ]
+        
+        state = decryption.Decryption.InvAddRoundKeys(state, w[1])
+
+        self.assertEqual(state, expected_round)
+
+        expected_mix = [ 
+            [0xd4, 0xe0, 0xb8, 0x1e],
+            [0xbf, 0xb4, 0x41, 0x27],
+            [0x5d, 0x52, 0x11, 0x98],
+            [0x30, 0xae, 0xf1, 0xe5]
+        ]
+        
+        state = decryption.Decryption.InvMixColumns(state)
+
+        self.assertEqual(state, expected_mix)
+        
+        expected_shift = [ 
+            [0xd4,0xe0,0xb8,0x1e],
+            [0x27,0xbf,0xb4,0x41],
+            [0x11,0x98,0x5d,0x52],
+            [0xae,0xf1,0xe5,0x30],
+        ]
+        
+        state = decryption.Decryption.InvShiftRows(state)
+
+        self.assertEqual(state, expected_shift)
+        
+        expected_sub = [ 
+            [0x19,0xa0,0x9a,0xe9],
+            [0x3d,0xf4,0xc6,0xf8],
+            [0xe3,0xe2,0x8d,0x48],
+            [0xbe,0x2b,0x2a,0x08]
+        ]
+        
+        state = decryption.Decryption.InvSubBytes(state)
+
+        self.assertEqual(state, expected_sub)
+
+    def test_decypher1(self):
+        key = 0x2b7e151628aed2a6abf7158809cf4f3c
+        cyphertext = [
+            [0x39, 0x02, 0xdc, 0x19],
+            [0x25, 0xdc, 0x11, 0x6a],
+            [0x84, 0x09, 0x85, 0x0b],
+            [0x1d, 0xfb, 0x97, 0x32]    
+        ]
+        expected = [
+            [0x32, 0x88, 0x31, 0xe0],
+            [0x43, 0x5a, 0x31, 0x37],
+            [0xf6, 0x30, 0x98, 0x07],
+            [0xa8, 0x8d, 0xa2, 0x34]
+        ]
+        plaintext = decryption.Decryption.decypher(cyphertext=cyphertext, key=key)
+        self.assertEqual(plaintext, expected)
+
 if __name__ == '__main__':
     unittest.main()
