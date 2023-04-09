@@ -60,7 +60,7 @@ class Decryption:
         return ret
 
     def decypher(cyphertext, key):
-        state = cyphertext
+        state = cyphertext.copy()
         w = keyExpansion.keyExpasion(key)
         state = Decryption.InvAddRoundKeys(state, w[10])
         for round in range(9, 0, -1):
