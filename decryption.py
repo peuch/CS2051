@@ -3,6 +3,7 @@ import keyExpansion
 from inv_sbox import INV_SBOX
 from auxiliary_functions import createState
 from auxiliary_functions import createText
+from auxiliary_functions import convertKey
 
 class Decryption:
     def __init__(self):
@@ -81,6 +82,6 @@ class Decryption:
         all_states = createState(text)
         all_encrypted = []
         for state in all_states:
-            all_encrypted.append(Decryption.decypher(state, key))
+            all_encrypted.append(Decryption.decypher(state, convertKey(key)))
         cyphertext = createText(all_encrypted)
         return cyphertext

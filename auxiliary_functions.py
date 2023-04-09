@@ -25,3 +25,13 @@ def createText(allstates):
             for r in range(4):
                 text.append(chr(state[r][c]))
     return text
+
+def convertKey(key):
+    number = 0
+    for i in key:
+        number *= 256
+        number += ord(i)
+    number %= (1 << 0x80)
+    return number
+    
+        
